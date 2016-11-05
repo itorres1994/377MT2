@@ -1,0 +1,148 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[a4paper,12pt,twoside]{book} % A4 paper and 11pt font size
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage[english]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{sectsty} % Allows customizing section commands
+\usepackage{mathtools}
+\usepackage{centernot}
+\usepackage{color}
+\usepackage{bbm}
+\usepackage{amssymb}
+\usepackage{enumerate}
+\usepackage{fancyhdr} % Custom headers and footers
+\usepackage{geometry}
+\usepackage{mathpazo}
+\usepackage{hyperref}
+\usepackage{imakeidx}  % ADD INDEX
+\usepackage{titlesec}  % WORK WITH CHAPTER/SECTION FORMATTING
+
+\geometry{left=20mm,right=20mm,top=20mm}
+
+% DOCUMENT WIDE SETTINGS
+\raggedbottom
+\makeindex[intoc]
+\setcounter{secnumdepth}{1}           % Subsections are unnumbered
+\newcounter{theoremnumber}[chapter]
+\newcounter{asidenumber}[chapter]
+\newcounter{problemcounter}[section]
+\setlength{\parskip}{0.1em}
+
+% Make subsection larger
+\titleformat{\subsection}{\Large\bfseries\filcenter}{}{1.0em}{}
+
+% SOME DEFINITIONS 
+\def\R{\mathbb R}
+\def\RS{\mathbb S}
+\def\F{\mathbb F}
+\def\Z{\mathbb Z}
+\def\Q{\mathbb Q}
+\def\C{\mathbb C}
+\def\D{\mathbb D}
+\def\H{\mathbb H}
+\def\Re{\textbf{Re}}
+\def\Im{\textbf{Im}}
+\def\1{\mathbbm{1}}
+
+%THEOREMS
+\theoremstyle{definition}
+\newtheorem*{prob}{\textbf{Problem :}}
+\newtheorem*{prf}{Proof}
+\newtheorem*{lem}{Lemma}
+\newtheorem*{sln}{Solution}
+\newtheorem*{fct}{Fact}
+\newtheorem*{dfn}{Definition}
+\newtheorem*{dfns}{Definitions}
+
+\newtheorem{prop}[theoremnumber]{Proposition}
+\newtheorem{cor}[theoremnumber]{Corollary}
+\newtheorem{thm}[theoremnumber]{Theorem}
+\newtheorem{aside}[asidenumber]{Aside}
+
+\newtheorem{prb}[problemcounter]{Problem}
+
+\newcommand{\irr}{\text{irr}}
+\newcommand{\ol}[1]{\overline{#1}}
+%NEW COMMANDS
+\newcommand{\mc}[1]{\mathcal{#1}}
+\newcommand{\mf}[1]{\mathfrak{#1}}
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\bbm}[1]{\mathbbm{#1}}
+\newcommand{\ms}[1]{\mathscr{#1}}
+\newcommand{\ttt}[1]{\texttt{#1}}
+\newcommand{\includecode}[2][Python]{\lstinputlisting[caption=#2, escapechar=, style=custom#1]{#2}}
+\newcommand{\embf}[1]{\textbf{\emph{#1}}}
+\newcommand{\tbf}[1]{\textbf{#1}}
+	% TOPOLOGY COMMANDS
+\newcommand{\intr}[1]{\accentset{\circ}{#1}}
+\newcommand{\bndr}{\partial}
+\newcommand{\clsr}[1]{\overline{#1}}
+\newcommand{\tpl}[1][]{\mathscr{T}_{#1}}
+	% COMPLEX VARIABLE COMMANDS
+\newcommand{\Log}{\text{Log}}
+\newcommand{\partials}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\hessian}[3]{\left(\begin{array}{cc}\frac{\partial^2 #1}{\partial #2^2} & \frac{\partial^2 #1}{\partial #1 \partial #2} \\ \frac{\partial^2 u}{\partial #1\partial #2} & \frac{\partial^2 #1}{\partial #2^2}\end{array}\right)}
+\newcommand{\Res}{\text{Res}}
+    % LINEAR ALGEBRA COMMANDS
+\newcommand{\Span}{\text{span}}
+\newcommand{\Col} {\text{Col}}
+\newcommand{\Row} {\text{Row}}
+\newcommand{\Null}{\text{Null}}
+\newcommand{\Rank}{\text{rank}}
+\newcommand{\Mat}[2]{\,\text{Mat}_{{#1}\times{#2}}}
+\renewcommand{\u}{\vec u}
+\renewcommand{\v}{\vec v}
+\newcommand{\w}{\vec w}
+\newcommand{\x}{\vec x}
+\newcommand{\y}{\vec y}
+\newcommand{\z}{\vec z}
+\newcommand{\im}{\text{im}}
+    % ALGEBRA COMMANDS
+\newcommand{\Stab}[2]{\,\text{Stab}_{#1}({#2})}
+\newcommand{\Cent}[2]{\,\text{C}_{#1}({#2})}
+\newcommand{\Center}[1]{\,\text{Z}({#1})}
+\newcommand{\Norm}[2]{\,\text{N}_{#1}({#2})}
+\newcommand{\subgp}{\leq}
+\newcommand{\Orb}[1]{\,{#1}\text{-orbit}}
+\newcommand{\orbit}[2]{\,\text{orbit}_{#1}({#2})}
+\newcommand{\Inn}[1]{\,\text{Inn}({#1})}
+\newcommand{\Aut}[1]{\,\text{Aut}({#1})}
+\newcommand{\Syl}{\,\text{Syl}}
+\newcommand{\normal}{\trianglelefteq}
+
+\newcommand{\defn}[1]{\emph{#1}\index{#1}}
+    % OTHER
+\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+    % HYPERREF SETUP
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+
+\pagestyle{fancy} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead[RO,LE]{\thepage} % No page header - if you want one, create it in the same way as the footers below
+\fancyhead[LO]{\leftmark}
+\fancyhead[RE]{\rightmark}
+\fancyfoot{} % Empty left footer
+\newcommand{\hrwidth}{0.8pt}
+\newcommand{\chrwidth}{1.8pt}
+\renewcommand{\headrulewidth}{1.3pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0.2pt} % Remove footer underlines
+\setlength{\headheight}{30.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height

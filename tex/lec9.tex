@@ -1,0 +1,32 @@
+\setcounter{chapter}{8}
+\chapter{Monitors and Condition Variables}
+
+\section{What's wrong with \defn{semaphors}?}
+\begin{itemize}
+    \item are shared global variables
+    \item no linguistic connection between semaphores and data they control
+    \item can be accessed from anywhere
+    \item dual purposed (mutex and sched constraints)
+    \item no guarantee of proper usage
+\end{itemize}
+
+Solution: use a higher level construct
+
+\section{Monitors}
+A monitor is similar to a class that ties data/operations and
+synchornization together. \\
+
+They differ from classes by guaranteeing mutual exlusion and requiring all data
+to be private.
+
+\begin{dfn} 
+    \begin{enumerate}
+        \item (From Wikipedia) A \defn{monitor} is a synchronization construct
+            that allows threads to have both mutual exclusion and the ability to
+            wait (block) for a certain condition to become true.
+        \item (From slides) A \emph{monitor} is a defines a \emph{lock} and zero
+            or more \emph{condition variables} for managing concurrent access to
+            shared data.
+    \end{enumerate}
+\end{dfn}
+
