@@ -76,4 +76,59 @@ class Queue{
 }
 \end{verbatim}
 
+\section{Condition Variables}
+\textbf{Question:} How can we change \texttt{remove()} to wait until something
+is on the queue?
+\begin{itemize}
+    \item Logically, we want to go to sleep inside the critical section.
+    \item But if we hold on to the lock and sleep, then other threads cannot
+        access shared queue, add an item to it, and wake up the sleeping thread.
+    \item \textbf{THREAD COULD SLEEP FOREVER}
+\end{itemize}
 
+\textbf{Solution:} use condition variables
+\begin{itemize}
+    \item Condition variables enable a thread to sleep inside a critical section
+    \item Any lock held by the thread is atomically released when the thread is
+        put to sleep.
+\end{itemize}
+
+\subsection{Operations on Condition Variables}
+\begin{dfn}
+    A \defn{condition variable} is a queue of threads waiting for something
+    inside a critical section.
+\end{dfn}
+
+Condition variables support three operations:
+\begin{enumerate}
+    \item \texttt{Wait()}\index{wait}: atomic (release lock, go to sleep). When the
+        process wakes up it re-acquires the lock
+    \item \texttt{Signal()}\index{signal}: wake up waiting thread, if one exists.
+    \item \texttt{Broadcast()}\index{broadcast}: wake up all waiting threads.
+\end{enumerate}
+
+\textbf{Invariant:} a thread must hold the lock while doing condition variable
+operations.
+
+In java, we use \texttt{wait()} to give up the lock, \texttt{notify()} to signal
+that the condition a thread is waiting on is satisfied, \texttt{notifyAll()} to
+wake up all waiting threads. Effectively there is one condition variable per
+object.
+
+\begin{verbatim}
+class Queue{
+    private Object[] queue;    // queue data
+
+    public void synchronized Add(Object item) {
+        queue.append(item);
+        notify();
+    }
+
+    public Object synchronized Remove(){
+        while (queue.size == 0)
+            wait();           // Give up lock and go to sleep
+
+        remove and return item;
+    }
+}
+\end{verbatim}
