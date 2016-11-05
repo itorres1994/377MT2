@@ -76,6 +76,72 @@ class Queue{
 }
 \end{verbatim}
 
+
+\section{More on Monitors -- From Wikipedia}
+An alternate definition of a monitor:
+\begin{dfn}
+    A \defn{monitor} is a thread-safe class, object, or module that uses
+    wrappted mutual exclusion in order to safely allow acess to a method or
+    viariable by more than one thread.
+\end{dfn}
+
+\emph{The defining characteristic of a monitor is that its methods are executed
+with mutual exclusion.} Thus we have an
+
+\textbf{Invariant:} at each point in time, at most one thread may be executing
+any of a monitors methods.
+
+Monitors were invented by Per Brinch Hansen and C. A. R. Hoare, and were first
+implemented in Brinch Hansen's Concurrent Pascal language.
+
+\subsection{Mutual Exclusion}
+While a thread is executing a method of a thread-safe object, it is said to
+\emph{occupy} the object by holding its mutex. Thread-safe objects are
+implemented to enforce that at \emph{each point in time}, at most one thread may
+occupy the object. When a thread calls a thread-safe object's method it mus
+twait until no other thread is occupying the thread-safe object.
+
+\begin{figure}[h]
+    \begin{verbatim}
+class Account {
+  private lock myLock
+
+  private int balance := 0
+  invariant balance >= 0
+
+  public method boolean withdraw(int amount)
+     precondition amount >= 0
+  {
+    myLock.acquire()
+    try {
+      if balance < amount {
+        return false
+      } else {
+        balance := balance - amount
+        return true
+      }
+    } finally {
+      myLock.release()
+    }
+  }
+
+  public method deposit(int amount)
+     precondition amount >= 0
+  {
+    myLock.acquire()
+    try {
+      balance := balance + amount
+    } finally {
+      myLock.release()
+    }
+  }
+}
+    \end{verbatim}
+    \caption{An implementation of a class with mutual exclusion}
+\end{figure}
+
+
+
 \section{Condition Variables}
 \textbf{Question:} How can we change \texttt{remove()} to wait until something
 is on the queue?
@@ -132,3 +198,75 @@ class Queue{
     }
 }
 \end{verbatim}
+
+
+\subsection{More on Condition Variabiables -- From Wikipedia}
+Often, mutual exclusion is not enough. Threads attempting an operation may need
+to wait until some condition \(P\) holds true. Busy waiting (ie, \texttt{while
+(not P) continue;} since mutual exclusion will stop any other thread from
+updating \(P\). There are other solutions but they have shortfalls (loop and
+release, for example).
+
+A classic example is the Producer/Consumer problem.
+
+\begin{figure}[h]
+\begin{verbatim}
+global RingBuffer queue; // A thread-unsafe ring-buffer of tasks.
+
+// Method representing each producer thread's behavior:
+public method producer(){
+    while(true){
+        task myTask=...; // Producer makes some new task to be added.
+        while(queue.isFull()){} // Busy-wait until the queue is non-full.
+        queue.enqueue(myTask); // Add the task to the queue.
+    }
+}
+
+// Method representing each consumer thread's behavior:
+public method consumer(){
+    while(true){
+        while (queue.isEmpty()){} // Busy-wait until the queue is non-empty.
+        myTask=queue.dequeue(); // Take a task off of the queue.
+        doStuff(myTask); // Go off and do something with the task.
+    }
+}
+
+\end{verbatim}
+    \caption{The classic Producer/Consumer problem --- this code has a serious
+    problem in that accesses to the queue can be interrupted and interleaved
+    with other threads accesses to the queue. In particular, the
+    \texttt{queue.enqueue()} and \texttt{queue.dequeue()} methods will likely
+    have instructions to update the queue's member variables such as size, start
+    and end positions, etc.}
+\end{figure}
+
+
+
+
+
+
+\section{Mesa vs Hoare Style Monitors}
+
+\textbf{Question:} What should happen when \texttt{signal()} is called?
+\begin{itemize}
+    \item \textbf{If there are no waiting threads:} No waiting threads
+        \(\implies \) the signaler continues and the signal is lost (different
+        from behavior with semaphores)
+    \item \textbf{If there is a waiting thread:} one of the threads starts executing,
+        others must wait.
+\end{itemize}
+
+\textbf{Mesa-style:} \emph{(Nachos, Java, most real OSs)}
+\begin{itemize}
+    \item The thread that signals keeps the lock (and thus the processor)
+    \item The waiting thread waits for the lock
+\end{itemize}
+
+There are two main styles of Monitor implementations. 
+\textbf{Hoare-style:} \emph{(Most textbooks)}
+\begin{itemize}
+    \item The thread that signals gives up the lock and the waiting thread gets
+        the lock
+    \item When the thread that was waiting and is no executing exits or waits
+        again, it releases the lock back to the signaling thread.
+\end{itemize}
