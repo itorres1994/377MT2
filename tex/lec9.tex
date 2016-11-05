@@ -27,6 +27,53 @@ to be private.
         \item (From slides) A \emph{monitor} is a defines a \emph{lock} and zero
             or more \emph{condition variables} for managing concurrent access to
             shared data.
+            \begin{itemize}
+                \item Monitors use a \emph{lock} to ensure that only a single
+                    thread is active in the monitor at a given time
+                \item The \emph{lock} also provides mutual exclusion for shared
+                    data
+                \item \emph{Condition variables} enable threads to go to sleep
+                    inside the critical sections, by releasing their lock at the
+                    same time it puts the thread to sleep
+
+            \end{itemize}
     \end{enumerate}
 \end{dfn}
+
+Monitor Operations:
+\begin{itemize}
+    \item Encapsulates shared date to protect
+    \item Acquires the mutex at start
+    \item Operates on the shared data
+    \item Temporarily release mutex if it can't complete
+    \item Reqcquires the mutex when it can continue
+    \item Releases the mutex at the end
+\end{itemize}
+
+\subsection{Implementing Monitors in Java}
+
+It is simple to turn a Java class into a monitor:
+
+\begin{itemize}
+    \item Make all data private
+    \item Make all methods synchronized (or at least the non-private ones)
+\end{itemize}
+
+\begin{verbatim}
+class Queue{
+    private data;     // queue data
+
+    public void synchronized Add(Object item) {
+        put item on queue;
+    }
+
+    public void synchronized Remove(){
+        if (queue not empty){
+            remove item;
+            return item;
+        }
+    }
+}
+\end{verbatim}
+
 
